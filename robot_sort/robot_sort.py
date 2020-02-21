@@ -1,3 +1,11 @@
+#   tests should run less than one second
+# * Robots functions- It can move left or right, swap items and turn on and off light
+#     * If it tries to pick up an item while already holding one, it will swap the items instead.
+#The light- can be turned on or off to start or end sorting
+#need to check the item to the right to see if it is larger or smaller than previous item- does this for whole list-
+#if a switch is made it's light should be on- once it's light is off it has finished looping
+#using hte light to keep track if it should keep looping over the list
+
 class SortingRobot:
     def __init__(self, l):
         """
@@ -93,12 +101,41 @@ class SortingRobot:
         return self._light == "ON"
 
     def sort(self):
-        """
-        Sort the robot's list.
-        """
-        # Fill this out
-        pass
-
+        self.set_light_on()
+        # Without access to the length of the list, I don't think we can do better than bubblesort -- o(n^2) or worse
+        # Using the robot light to check to see if we should continue looping- start with it on #
+        #  I know bubblesort may not be best option here 
+        #but works on delivering less than one sec and can work in comparing on item to the left or right since those are the robots only movements
+        while self.light_is_on() == True:
+            # We break out if we hit the end of the while loop.
+            self.set_light_off()
+            # Checking to see if we at the end of the list?
+            if self.can_move_right() == False:
+                print("Beep Bop - Can't move further right!")
+                #so moves left
+                while self.can_move_left() == True:
+                    print("Beep Bop - Moving left!")
+                    self.move_left()
+            while self.can_move_right() == True:
+                  print("Beep Bop - Comparing items!")
+                  #moving right it is comparing right item to current item - 
+                  # Have to swap the item here or we'll end up with a None
+                  self.swap_item()
+                  self.move_right()
+                  #if the held item is greater than current item, swap them
+                  if self.compare_item() == 1:
+                        self.swap_item()
+                        #take the current item which is less than previous item and then swap
+                        self.move_left()
+                        self.swap_item()
+                        # We're looping back and forth, checking -- this is the only time we need to set the light on,
+                        # It means we have a comparison that resulted in a swap - then it loops again
+                        self.set_light_on()
+                  else:
+                        self.move_left()
+                        self.swap_item()
+                        self.move_right()
+            print("Beep Bop - Going to sleep!")
 
 if __name__ == "__main__":
     # Test our your implementation from the command line

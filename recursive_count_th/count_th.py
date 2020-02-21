@@ -5,6 +5,16 @@ Your function must utilize recursion. It cannot contain any loops.
 '''
 def count_th(word):
     
-    # TBC
-    
-    pass
+    # Base case
+    if len(word) < 2:
+        return 0
+    # Recursive case
+    # Check if the first 2 characters match
+    # return +1 if so
+    elif word[:2] == 'th':
+       return count_th(word[2:]) + 1
+    # Otherwise return the results of the rest of the string
+    else:
+      return count_th(word[1:])
+
+#print(count_th("th th"))
